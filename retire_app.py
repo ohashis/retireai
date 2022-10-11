@@ -209,7 +209,7 @@ def main():
             df = copy.deepcopy(st.session_state.df)
 
             # 要約統計量の表示
-            st_display_table(df.head(10))
+            st_display_table(df.describe())
 
             
         else:
@@ -247,11 +247,6 @@ def main():
             # 正解率を出力
             st.caption('決定木の予測')
             st.subheader(f"正解率：{train_scores}")
-
-            # 決定木のツリーを出力
-            st.caption('')
-            st.caption('決定木の可視化')
-            st_display_dtree(clf,)
             
         else:
             st.subheader('訓練用データをアップロードしてください')
