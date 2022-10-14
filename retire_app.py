@@ -224,10 +224,15 @@ def main():
             # セッションステートに退避していたデータフレームを復元
             df = copy.deepcopy(st.session_state.df)
 
+            activities = ["退職","年齢","出張頻度","通勤距離","最終学歴","社員番号","職場環境の満足度","労働意欲","査定ランク","仕事への満足度","月給(ドル)","転職回数","昇給率","能力評価","人間関係の満足度","ストックオプション","社会人歴","昨年の研修時間","ワークライフバランス","在職年数","現在の役職年数","昇進からの経過年数","現在の上司になってからの年数","残業_有","性別_男性","配偶者_離婚","配偶者_結婚","配偶者_独身","部署_人事","部署_研究開発","部署_営業","専攻_経営","専攻_科学","専攻_医学","専攻_工学","専攻_人事","専攻_その他","役職_経営層","役職_管理職","役職_主任","役職_一般"]
+            choice = st.sidebar.selectbox("グラフのx軸", activities)
+
             # グラフの表示
-            st_display_graph(df,"退職")    
+            st_display_graph(df,choice)    
         else:
             st.subheader('訓練用データをアップロードしてください')
+
+
 
 
     if choice == '学習と検証':
@@ -241,13 +246,21 @@ def main():
             train_X = df.drop("退職", axis=1)   # 退職列以外を説明変数にセット
             train_Y = df["退職"]                # 退職列を目的変数にセット
 
+            activities = [1, 2, 3]
+            choice = st.sidebar.selectbox("Select Activity", activities)
+
             # 決定木による予測
-            clf, train_pred, train_scores = ml_dtree(train_X, train_Y, 2)
+            clf, train_pred, train_scores = ml_dtree(train_X, train_Y, choice)
 
             # 正解率を出力
             st.caption('決定木の予測')
             st.subheader(f"正解率：{train_scores}")
-            
+
+            # 決定木のツリーを出力
+            st.caption('') # 改行
+            st.caption('決定木の可視化')
+            st_display_dtree(clf,train_X.columns)
+    
         else:
             st.subheader('訓練用データをアップロードしてください')
         
